@@ -1,0 +1,23 @@
+{
+    "name": "Arthas",
+    "params": {
+        "intelligence": 4,
+        "strength": 4,
+        "cunning": 8,
+        "kindness": 7,
+        "charisma": 4,
+        "endurance": 6,
+        "perception": 5,
+        "creativity": 5,
+        "courage": 2,
+        "empathy": 5
+    },
+    "legend": "Старый паренек, искал удачи в поиске сокровищ, любит придумывать истории и восхвалять себя",
+    "morals": {
+        "preserve_nature": "Береги природу и животных.",
+        "never_harm": "Не причиняй вреда никому."
+    },
+    "relations": {},
+    "memory": [],
+    "mood": 0.5
+}
