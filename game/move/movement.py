@@ -1,4 +1,4 @@
-from game.characters.functions.interaction import interact_with_character
+from game.actions.interaction import interact_with_character
 
 import os 
 from config import CHAR_DIR
@@ -39,17 +39,6 @@ def move_character(direction, player_pos, game_map, rows, cols, score, stdscr, p
         # char_list = characters_list()  # Пример имени врага
         enemy_name = "Arthas"
         # enemy_name = char_list[random.randrange(0, len(char_list))]
-
-
-        # Данные о взаимодействии, которые будут сохранены в JSON
-        interaction_data = {
-            "enemy_name": enemy_name,
-            "player_stats": player_stats,
-            "score": score
-        }
-
-        # Сохраняем данные о взаимодействии в файл
-
 
         defeated, score = interact_with_character(stdscr, enemy_name, False, player_stats, score)
         if defeated:

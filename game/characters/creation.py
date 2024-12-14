@@ -2,9 +2,23 @@ import random
 import json
 import os
 from typing import List, Dict, Optional
-from llm.ai21 import LLMServiceAI21
+from game.llm.ai21 import LLMServiceAI21
 from config import PARAM_NAMES, MORAL_POOL
 
+
+
+
+
+# class User:
+#      def __init__(self, name: str, params: Dict[str, int], legend: str, morals: Dict[str, str], mood: float = 0.5, position: Optional[tuple] = None, memory: Optional[str] = None, relations: Optional[Dict] = None):
+#         self.name = name
+#         self.params = params
+#         self.legend = legend
+#         self.morals = morals
+#         self.mood = mood
+#         self.position = position
+#         self.relations = relations if relations is not None else {}
+#         self.memory = memory if memory is not None else []
 
 class Character:
     def __init__(self, name: str, params: Dict[str, int], legend: str, morals: Dict[str, str], mood: float = 0.5, position: Optional[tuple] = None, memory: Optional[str] = None, relations: Optional[Dict] = None):

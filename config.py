@@ -7,10 +7,28 @@ CHAR_DIR = "/Users/masterpo/Desktop/WestWorld/game/characters/npc"
 TOTAL_POINTS = 20
 
 PARAM_NAMES = [
-    "intelligence", "strength", "cunning", "kindness", 
-    "charisma", "endurance", "perception", 
-    "creativity", "courage", "empathy"
+    "intelligence", "strength", "endurance", 
+    "courage", "perception"
 ]
+
+FACE = [
+            "        ########################",
+            "      ##                        ##",
+            "    ##                            ##",
+            "   ##    O                   O    ##",
+            "  ##                                ##",
+            " ##                                  ##",
+            " ##    ####               ####     ##",
+            " ##   #    #             #    #    ##",
+            " ##   #    #             #    #    ##",
+            " ##   #    #    ___    #    #    ##",
+            "  ##   ####    /   \\    ####    ##",
+            "   ##          |     |         ##",
+            "    ##         |     |        ##",
+            "     ##        |_____|       ##",
+            "      ##                        ##",
+            "       ########################"
+        ]
 
 MORAL_POOL = [
             {"key": "help_others", "description": "Помогай другим в беде."},
@@ -24,3 +42,12 @@ MORAL_POOL = [
             {"key": "embrace_chaos", "description": "Следуй за хаосом, не люби порядок."},
             {"key": "pursue_power", "description": "Добивайся силы и влияния любой ценой."}
         ]
+
+# Статы игрока
+PLAYER_STATS = {
+    "intelligence": 5,
+    "strength": 6,
+    "endurance": 6,
+    "courage": 5,
+    "perception": 4
+}
