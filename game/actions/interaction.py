@@ -6,9 +6,10 @@ from game.llm.ai21 import LLMServiceAI21
 from game.screen.drawing import setup_colors
 from game.actions.battle import start_battle
 from game.rules.game_over import game_over
-from game.characters.loading import load_character_data
+from game.characters.loading import load_character_data, save_character_data
 from game.screen.logging import display_error
 from game.screen.drawing import GameInterface
+from game.actions.dialogue import generate_npc_response, evaluate_dialogue, get_user_input
 import curses
 from config import FACE
 
@@ -17,36 +18,7 @@ from config import FACE
 def get_input():
     user_input = input().strip()  # Получаем строку от пользователя и убираем лишние пробелы
     return user_input
-import random
-import curses
-import json
 
-from game.llm.ai21 import LLMServiceAI21
-from game.screen.drawing import setup_colors
-from game.actions.battle import start_battle
-from game.rules.game_over import game_over
-from game.characters.loading import load_character_data
-from game.screen.logging import display_error
-from game.screen.drawing import GameInterface
-
-
-def get_user_input(stdscr):
-    """Получает пользовательский ввод с обработкой команд и Ctrl+S."""
-    stdscr.move(31, 0)
-    stdscr.addstr("\nВаше сообщение (CNTRL C для завершения): ", curses.color_pair(3))
-    stdscr.refresh()
-    curses.echo()
-    user_input = stdscr.getstr().decode('utf-8', errors='ignore').strip()
-    curses.noecho()
-    return user_input
-
-
-def generate_npc_response(ai21, sys_msg, conversation_history):
-    """Генерирует ответ NPC с использованием AI21."""
-    response = ai21.generate_response(sys_msg, "\n".join(conversation_history))
-    if not response:
-        return None
-    return response
 
 from config import FACE
 
@@ -58,21 +30,30 @@ def interact_with_character(stdscr, character_name, is_friend, player_stats, sco
     interface = GameInterface(stdscr)
 
     try:
+        # Загружаем данные персонажа
         character_data = load_character_data(character_name)
     except FileNotFoundError:
         display_error(stdscr, "[Ошибка: Не удалось загрузить данные для персонажа]", 1)
         return None
 
+    # Определяем роль персонажа
     role = "друг" if is_friend else "враг"
-    sys_msg = (f"Ты играешь в DnD. У тебя есть персонаж, и ты должен следовать его роли. Отвечай по 2-3 предложения максимум."
-               f"Ты {role} по имени {character_data['name']}. "
-               f"Легенда: {character_data['legend']}. "
-               f"Параметры: {character_data['params']}. "
-               f"Моральные принципы: {character_data['morals']}. "
-               f"Настроение: {character_data['mood']}.")
+
+    # Включаем информацию о "relations" (отношении с игроком) в сообщение
+    relations_info = character_data.get('relations', {}).get('master', 0.5)  # по умолчанию 0.5
+    sys_msg = (
+        f"Ты играешь в DnD. У тебя есть персонаж, и ты должен следовать его роли. Отвечай по 2-3 предложения максимум. "
+        f"Ты {role} по имени {character_data['name']}. "
+        f"Легенда: {character_data['legend']}. "
+        f"Параметры: {character_data['params']}. "
+        f"Взаимоотношение с игроком: {relations_info}. "  # Вставляем отношение
+        f"Моральные принципы: {character_data['morals']}. "
+        f"Настроение: {character_data['mood']}."
+    )
+    
+    # Начинаем историю диалога
     conversation_history = [f"System: {sys_msg}"]
 
-    # Приветствие персонажа
     stdscr.addstr(28, 0, f"Ты встретил {role}: {character_data['name']}.\n", curses.color_pair(4))
     stdscr.addstr(29, 0, f"Легенда: {character_data['legend']}\n", curses.color_pair(2))
     stdscr.refresh()
@@ -82,7 +63,6 @@ def interact_with_character(stdscr, character_name, is_friend, player_stats, sco
         while True:
             interface = GameInterface(stdscr)
             
-
             user_input = get_user_input(stdscr)
             if user_input.startswith('@run') or 'run!' in user_input.lower():
                 stdscr.addstr("\nВы убежали!.\n", curses.color_pair(4))
@@ -110,17 +90,20 @@ def interact_with_character(stdscr, character_name, is_friend, player_stats, sco
                 display_error(stdscr, "[Ошибка: Не удалось получить ответ.]", 1)
                 continue
 
-            # Очищаем только область, где будет выводиться ответ NPC, если необходимо
+            # Очищаем только область, где будет выводиться ответ NPC
             stdscr.move(5, 0)  # Перемещаем курсор в начало
             stdscr.clrtoeol()  # Очищаем строку
 
+            # Оценка поведения игрока
+            dialogue_score = evaluate_dialogue(user_input, character_data)
+
             # Добавляем ответ персонажа в историю и отображаем его
             conversation_history.append(f"Assistant: {response}")
-            
             string = f"\n{character_data['name']} отвечает: {response}\n"
+
+            # Выводим ответ NPC в интерфейсе
             interface.draw_interface(string)
-            
-            # stdscr.addstr(f"\n{character_data['name']} отвечает: {response}\n", curses.color_pair(1))
+
             stdscr.refresh()
             count += 1
 

@@ -6,6 +6,21 @@ CHAR_DIR = "/Users/masterpo/Desktop/WestWorld/game/characters/npc"
 # Params For Characters
 TOTAL_POINTS = 20
 
+
+positive_words = ['друж', 'помо', 'любов', 'добро', 'забота', 'помо', 'друз', 'друг', 'вдох', 'рад', 'положит', 'надеяться']
+aggressive_words = ['уби', 'агрессия', 'насилие', 'убий', 'угроза', 'напасть', 'нападение', 'насиловать', 'гнев', 'ненависть', 'зло', 'ударить', 'грубость']
+polite_words = ['спасибо', 'пожалуйста', 'извините', 'прощение', 'вежливость', 'извиниться', 'уважать', 'почтение', 'сожаление', 'милость']
+
+positive_words_en = ['friend', 'help', 'love', 'kindness', 'care', 'assistance', 'friends', 'friendliness', 'inspire', 'joy', 'positive', 'hope']
+aggressive_words_en = ['kill', 'aggression', 'violence', 'murder', 'threat', 'attack', 'assault', 'rape', 'anger', 'hate', 'evil', 'hit', 'rudeness']
+polite_words_en = ['thank you', 'please', 'sorry', 'apology', 'politeness', 'excuse me', 'respect', 'regard', 'regret', 'mercy']
+
+POSITIVE = [positive_words, positive_words_en]
+AGGRESSIVE = [aggressive_words, aggressive_words_en]
+POLITE = [polite_words, polite_words_en]
+
+
+
 PARAM_NAMES = [
     "intelligence", "strength", "endurance", 
     "courage", "perception"
@@ -17,16 +32,16 @@ FACE = [
             "    ##                            ##",
             "   ##    O                   O    ##",
             "  ##                                ##",
-            " ##                                  ##",
-            " ##    ####               ####     ##",
-            " ##   #    #             #    #    ##",
-            " ##   #    #             #    #    ##",
-            " ##   #    #    ___    #    #    ##",
-            "  ##   ####    /   \\    ####    ##",
-            "   ##          |     |         ##",
-            "    ##         |     |        ##",
-            "     ##        |_____|       ##",
-            "      ##                        ##",
+            " ##                                 ##",
+            " ##    ####                ####     ##",
+            " ##   #    #              #    #    ##",
+            " ##   #    #              #    #    ##",
+            " ##   #    #    ___       #    #    ##",
+            "  ##   ####    /    \\     ####    ##",
+            "   ##          |     |           ##",
+            "    ##         |     |          ##",
+            "     ##        |_____|         ##",
+            "      ##                      ##",
             "       ########################"
         ]
 

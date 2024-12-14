@@ -12,7 +12,9 @@
         "preserve_nature": "Береги природу и животных.",
         "never_harm": "Не причиняй вреда никому."
     },
-    "relations": {},
+    "relations": {
+        "master": 0.7
+    },
     "memory": [],
     "mood": 0.5
 }
