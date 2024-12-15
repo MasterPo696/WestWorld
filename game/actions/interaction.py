@@ -22,12 +22,12 @@ def get_input():
 
 from config import FACE
 
-def interact_with_character(stdscr, character_name, is_friend, player_stats, score):
+def interact_with_character(stdscr, character_name, is_friend, player_stats, score, rows):
     """Основная функция для взаимодействия с персонажем."""
     ai21 = LLMServiceAI21()  # Инициализация AI21 сервиса
     setup_colors()  # Настройка цветов для curses
 
-    interface = GameInterface(stdscr)
+
 
     try:
         # Загружаем данные персонажа
@@ -39,7 +39,7 @@ def interact_with_character(stdscr, character_name, is_friend, player_stats, sco
     # Определяем роль персонажа
     role = "друг" if is_friend else "враг"
 
-    # Включаем информацию о "relations" (отношении с игроком) в сообщение
+    # Включаем информацию о "relainteract_with_charactertions" (отношении с игроком) в сообщение
     relations_info = character_data.get('relations', {}).get('master', 0.5)  # по умолчанию 0.5
     sys_msg = (
         f"Ты играешь в DnD. У тебя есть персонаж, и ты должен следовать его роли. Отвечай по 2-3 предложения максимум. "
@@ -61,9 +61,9 @@ def interact_with_character(stdscr, character_name, is_friend, player_stats, sco
     count = 0
     try:
         while True:
-            interface = GameInterface(stdscr)
+            interface = GameInterface(stdscr, rows)
             
-            user_input = get_user_input(stdscr)
+            user_input = get_user_input(stdscr, rows)
             if user_input.startswith('@run') or 'run!' in user_input.lower():
                 stdscr.addstr("\nВы убежали!.\n", curses.color_pair(4))
                 stdscr.refresh()
@@ -100,7 +100,8 @@ def interact_with_character(stdscr, character_name, is_friend, player_stats, sco
             # Добавляем ответ персонажа в историю и отображаем его
             conversation_history.append(f"Assistant: {response}")
             string = f"\n{character_data['name']} отвечает: {response}\n"
-
+            
+            string = f"\n{response}\n"
             # Выводим ответ NPC в интерфейсе
             interface.draw_interface(string)
 

@@ -2,9 +2,9 @@ from game.characters.loading import load_character_data, save_character_data
 import curses
 from config import POSITIVE, AGGRESSIVE, POLITE
 
-def get_user_input(stdscr):
+def get_user_input(stdscr, rows):
     """Получает пользовательский ввод с обработкой команд и Ctrl+S."""
-    stdscr.move(31, 0)
+    stdscr.move(rows+6, 0)
     stdscr.addstr("\nВаше сообщение (CNTRL C для завершения): ", curses.color_pair(3))
     stdscr.refresh()
     curses.echo()
