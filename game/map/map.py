@@ -1,16 +1,9 @@
 import curses
-from game.screen.drawing import setup_colors
+from game.screen.interface import setup_colors
 import random
 
 
-# Функция для генерации случайных позиций объектов
-def generate_position(occupied_positions, rows, cols):
-    """Генерация случайных координат для объектов."""
-    while True:
-        x = random.randint(1, rows - 2)  # Исключаем стены
-        y = random.randint(1, cols - 2)
-        if (x, y) not in occupied_positions:
-            return (x, y)
+
         
 # Функция для создания карты
 def create_map(rows, cols, player_pos, enemies, friends, walls, coins):
@@ -58,17 +51,61 @@ def create_map(rows, cols, player_pos, enemies, friends, walls, coins):
 #     stdscr.addstr(f"Счёт: {score}\n")
 #     stdscr.refresh()
 
+import random
 
-# Функция для создания позиций объектов (врагов, друзей, монет и т.д.)
+def grow_walls(rows, cols, start_x, start_y, growth_limit=20):
+    """Функция для кораллового роста стен, начиная с случайной точки на верхней стене."""
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Вверх, вниз, влево, вправо
+    walls = set([(start_x, start_y)])  # Начальная точка
+    occupied_positions = set(walls)  # Стены уже заняты
+
+    growth_count = 0
+    while growth_count < growth_limit:
+        # Случайным образом выбираем одну из стен для роста
+        x, y = random.choice(list(walls))
+        random.shuffle(directions)  # Перемешиваем направления для случайности
+
+        for dx, dy in directions:
+            new_x, new_y = x + dx, y + dy
+            # Проверяем, что новая позиция внутри карты и не занята
+            if 1 <= new_x < rows - 1 and 1 <= new_y < cols - 1 and (new_x, new_y) not in occupied_positions:
+                walls.add((new_x, new_y))
+                occupied_positions.add((new_x, new_y))
+                growth_count += 1
+                break
+
+    return list(walls)
+
+
+def generate_position(occupied_positions, rows, cols):
+    """Генерация случайных координат для объектов."""
+    while True:
+        x = random.randint(1, rows - 2)  # Исключаем стены
+        y = random.randint(1, cols - 2)
+        if (x, y) not in occupied_positions:
+            return (x, y)
+
 def create_objects_pos(rows, cols, enemy_count, friend_count, coins_count):
     # Инициализация списков объектов
     coins = []
     enemies_pos = []
     friends_pos = []
+    # Базовые стены по периметру
     walls = [(0, i) for i in range(cols)] + [(rows - 1, i) for i in range(cols)] + \
             [(i, 0) for i in range(rows)] + [(i, cols - 1) for i in range(rows)]
 
+    # Случайная точка на верхней стене для начала роста
+    start_x, start_y = 0, random.randint(1, cols - 2)  # Выбираем случайную точку на верхней стене
+
+    # Добавляем растущий коралловый рост стены
+    grown_walls = grow_walls(rows, cols, start_x, start_y, growth_limit=20)
+
+    # Добавляем новые стены из функции grow_walls к общему списку walls
+    walls.extend(grown_walls)  # Используем extend, чтобы добавить элементы из grown_walls в walls
+
     occupied_positions = set(walls)  # Стены уже заняты
+
+
 
     # Генерация позиций для врагов
     for _ in range(enemy_count):
@@ -92,6 +129,7 @@ def create_objects_pos(rows, cols, enemy_count, friend_count, coins_count):
     player_pos = generate_position(occupied_positions, rows, cols)
 
     return player_pos, enemies_pos, friends_pos, walls, coins
+
 
 
 def print_map(stdscr, game_map, score):

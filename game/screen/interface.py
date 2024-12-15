@@ -20,17 +20,27 @@ class GameInterface:
         self.stdscr.refresh()
 
     # Функция для рисования интерфейса
-    def draw_interface(self, string):
-        # Очистка только строки 32, где будет выводиться текст
-        self.stdscr.move(self.rows+7, 0)
-        self.stdscr.clrtoeol()
+    def draw_interface(self, string, character_data):
+        height, width = self.stdscr.getmaxyx()
 
-        # Рисуем картинку персонажа
-        self.print_character(4, 2)
+        # Разделим экран на 3 части: слева (для лица), справа (для статистики), снизу (для текста)
+        face_width = 20  # Ширина для лица персонажа
+        stats_width = width - face_width  # Оставшееся место для статистики
 
-        # Устанавливаем курсор на строку 32 и выводим текст, ограниченный 60 символами
-        self.stdscr.move(self.rows+7, 0)  # Перемещаем курсор на строку 32
-        self.print_text(string, 0, self.rows+8)  # Максимальная ширина для текста = 60 символов
+        # Очистим окна
+        self.stdscr.clear()
+
+        # Отображаем лицо персонажа слева
+        self.print_character(2, 2)
+
+        # Отображаем статистику справа
+        self.stdscr.addstr(2, face_width + 2, f"Имя: {character_data['name']}", curses.color_pair(2))
+        self.stdscr.addstr(3, face_width + 2, f"Здоровье: {character_data['params']['endurance']}", curses.color_pair(2))
+        self.stdscr.addstr(4, face_width + 2, f"Сила: {character_data['params']['strength']}", curses.color_pair(2))
+        self.stdscr.addstr(5, face_width + 2, f"Интеллект: {character_data['params']['intelligence']}", curses.color_pair(2))
+
+        # Нижняя строка для текста
+        self.stdscr.addstr(height - 3, 0, string, curses.color_pair(1))
 
         self.stdscr.refresh()
 

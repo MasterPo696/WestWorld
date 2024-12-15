@@ -7,6 +7,17 @@ import random
 import logging
 import json
 
+def load_character_data2(name):
+    """Загружает данные персонажа из файла."""
+    # Пример данных персонажа, для теста
+    return {
+        'name': name,
+        'legend': 'Старый рыцарь, который искал славу.',
+        'params': {'endurance': 100, 'strength': 50, 'intelligence': 30},
+        'morals': 'Добрые',
+        'mood': 'Счастлив',
+        'relations': {'master': 0.7}
+    }
 
 
 # Функция для управления движением персонажа
@@ -17,6 +28,7 @@ def move_character(direction, player_pos, game_map, rows, cols, score, stdscr, p
     game_map[x][y] = " "  # Очищаем старую позицию
     new_x, new_y = x, y
 
+    # Двигаем персонажа в соответствующем направлении
     if direction == "up" and x > 0:
         new_x -= 1
     elif direction == "down" and x < rows - 1:
@@ -26,30 +38,23 @@ def move_character(direction, player_pos, game_map, rows, cols, score, stdscr, p
     elif direction == "right" and y < cols - 1:
         new_y += 1
 
-    # Проверка на стены
+    # Проверка на столкновение со стеной
     if game_map[new_x][new_y] == '/':
-        return player_pos, score
-
-    # Проверка на стены
-    if game_map[new_x][new_y] == '/':
-        return player_pos, score
+        game_map[x][y] = 'X'  # Возвращаем персонажа на исходную позицию
+        return player_pos, score  # Персонаж не двигается
 
     # Проверка на врагов
     if game_map[new_x][new_y] == 'V':
-        # create_character_if_not_exist(stdscr, score, character_name, characters)
-        # char_list = characters_list()  # Пример имени врага
         enemy_name = "Arthas"
-        # name = char_list[random.randrange(0, len(char_list))]
-
         defeated, score = interact_with_character(stdscr, enemy_name, False, player_stats, score, rows)
         if defeated:
-            game_map[new_x][new_y] = " "
+            game_map[new_x][new_y] = " "  # Убираем врага, если побежден
         else:
-            return player_pos, score
-        
-        # Проверка на монеты
+            return player_pos, score  # Если не побежден, не двигаем игрока
+
+    # Проверка на монеты
     if game_map[new_x][new_y] == 'C':
-        score += 1
+        score += 1  # Увеличиваем счет, если монета
 
     # Проверка на друзей
     if game_map[new_x][new_y] == 'F':
@@ -58,5 +63,5 @@ def move_character(direction, player_pos, game_map, rows, cols, score, stdscr, p
 
     # Обновляем позицию игрока
     player_pos = (new_x, new_y)
-    game_map[player_pos[0]][player_pos[1]] = 'X'
+    game_map[player_pos[0]][player_pos[1]] = 'X'  # Перемещаем персонажа на новую позицию
     return player_pos, score
