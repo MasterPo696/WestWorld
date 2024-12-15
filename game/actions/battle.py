@@ -1,10 +1,9 @@
 import curses
 import random
 from game.rules.game_over import game_over
-
 def display_battle_info(stdscr, character_data, player_stats, player_health, enemy_health):
     """Отображает информацию о битве, включая параметры игрока и врага."""
-    stdscr.clear()
+    stdscr.clear()  # Очистить экран перед рисованием новой информации
     stdscr.addstr(f"Вы начали битву с врагом: {character_data['name']}!\n", curses.color_pair(1))
     stdscr.addstr("Битва началась!\n", curses.color_pair(3))
     stdscr.addstr("Параметры врага:\n", curses.color_pair(1))
@@ -13,9 +12,11 @@ def display_battle_info(stdscr, character_data, player_stats, player_health, ene
         player_value = player_stats.get(param, 0)  # Если параметр не существует у игрока, то ставим 0
         stdscr.addstr(f"{player_value}\n", curses.color_pair(2))  # Зелёный цвет для игрока
 
+    # Отображаем здоровье
     stdscr.addstr(f"\nВаше здоровье: {player_health}\n", curses.color_pair(4))
     stdscr.addstr(f"Здоровье врага: {enemy_health}\n", curses.color_pair(4))
-    stdscr.refresh()
+
+    stdscr.refresh()  # Перерисовываем экран
 
 def get_player_choice(stdscr):
     """Получает выбор игрока для атаки, защиты или побега."""
@@ -101,6 +102,9 @@ def start_battle(stdscr, character_data, player_stats, score):
         # Атака врага
         if enemy_health > 0:
             player_health = perform_enemy_attack(stdscr, player_stats, character_data, player_health)
+
+        # Обновляем информацию о битве
+        display_battle_info(stdscr, character_data, player_stats, player_health, enemy_health)
 
         stdscr.refresh()
 

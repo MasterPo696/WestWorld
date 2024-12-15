@@ -12,7 +12,7 @@ class GameInterface:
     # Функция для отображения персонажа
     def print_character(self, x, y):
         for i, line in enumerate(self.character_image):
-            self.stdscr.addstr(y + i, x, line)
+            self.stdscr.addstr(y + i+5, x, line)
 
     def print_text(self, text, x, y):
         """Просто выводит текст без переноса строк."""
@@ -24,7 +24,7 @@ class GameInterface:
         height, width = self.stdscr.getmaxyx()
 
         # Разделим экран на 3 части: слева (для лица), справа (для статистики), снизу (для текста)
-        face_width = 20  # Ширина для лица персонажа
+        face_width = 110  # Ширина для лица персонажа
         stats_width = width - face_width  # Оставшееся место для статистики
 
         # Очистим окна
@@ -33,14 +33,15 @@ class GameInterface:
         # Отображаем лицо персонажа слева
         self.print_character(2, 2)
 
+        x = 11
         # Отображаем статистику справа
-        self.stdscr.addstr(2, face_width + 2, f"Имя: {character_data['name']}", curses.color_pair(2))
-        self.stdscr.addstr(3, face_width + 2, f"Здоровье: {character_data['params']['endurance']}", curses.color_pair(2))
-        self.stdscr.addstr(4, face_width + 2, f"Сила: {character_data['params']['strength']}", curses.color_pair(2))
-        self.stdscr.addstr(5, face_width + 2, f"Интеллект: {character_data['params']['intelligence']}", curses.color_pair(2))
+        self.stdscr.addstr(2 + x, stats_width, f"Имя: {character_data['name']}", curses.color_pair(2))
+        self.stdscr.addstr(3 + x, stats_width, f"Здоровье: {character_data['params']['endurance']}", curses.color_pair(2))
+        self.stdscr.addstr(4 + x, stats_width, f"Сила: {character_data['params']['strength']}", curses.color_pair(2))
+        self.stdscr.addstr(5 + x, stats_width, f"Интеллект: {character_data['params']['intelligence']}", curses.color_pair(2))
 
         # Нижняя строка для текста
-        self.stdscr.addstr(height - 3, 0, string, curses.color_pair(1))
+        self.stdscr.addstr(height - 16, 0, string, curses.color_pair(1))
 
         self.stdscr.refresh()
 
