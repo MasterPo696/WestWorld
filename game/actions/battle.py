@@ -1,6 +1,7 @@
-import curses
 import random
+import curses
 from game.rules.game_over import game_over
+
 def display_battle_info(stdscr, character_data, player_stats, player_health, enemy_health):
     """Отображает информацию о битве, включая параметры игрока и врага."""
     stdscr.clear()  # Очистить экран перед рисованием новой информации
@@ -25,11 +26,16 @@ def get_player_choice(stdscr):
     return stdscr.getch()
 
 def perform_attack(stdscr, player_stats, character_data, enemy_health):
-    """Выполняет атаку игрока, обновляя здоровье врага."""
-    stdscr.addstr("\nИ герой решает атаковать...\n", curses.color_pair(3))
-    # Бросаем кубик для игрока и врага
+    """Выполняет атаку игрока, обновляя здоровье врага с учетом экипированных предметов."""
+    
+    # Учитываем параметры с экипированных предметов
+    weapon_bonus = 0
+    if character_data['inventory']['equipped']['weapon']:
+        weapon = character_data['inventory']['equipped']['weapon']
+        weapon_bonus = weapon.get('effect', {}).get('strength', 0)
+
+    player_roll = random.randint(1, 6) + player_stats.get('strength', 0) + weapon_bonus  # Урон с учетом оружия
     enemy_roll = random.randint(1, 6) + character_data['params'].get('strength', 0)
-    player_roll = random.randint(1, 6) + player_stats.get('strength', 0)
     
     # Показываем результат кубиков
     stdscr.addstr(f"Кубики: Враг: {enemy_roll} | Вы: {player_roll}\n", curses.color_pair(1))
@@ -41,10 +47,15 @@ def perform_attack(stdscr, player_stats, character_data, enemy_health):
     return enemy_health
 
 def perform_defense(stdscr, player_stats, character_data, player_health):
-    """Выполняет защиту игрока, обновляя здоровье игрока."""
-    stdscr.addstr("\nИ герой решает защищаться...\n", curses.color_pair(3))
-    # Бросаем кубики для защиты
-    player_roll = random.randint(1, 6) + player_stats.get('strength', 0)
+    """Выполняет защиту игрока, обновляя здоровье игрока с учетом экипированных предметов."""
+    
+    # Учитываем бонусы от брони
+    armor_bonus = 0
+    if character_data['inventory']['equipped']['armor']:
+        armor = character_data['inventory']['equipped']['armor']
+        armor_bonus = armor.get('effect', {}).get('strength', 0)
+    
+    player_roll = random.randint(1, 6) + player_stats.get('strength', 0) + armor_bonus  # Защита с учетом брони
     enemy_roll = random.randint(1, 6) + character_data['params'].get('strength', 0)
     
     # Показываем результат кубиков
@@ -57,9 +68,15 @@ def perform_defense(stdscr, player_stats, character_data, player_health):
     return player_health
 
 def perform_enemy_attack(stdscr, player_stats, character_data, player_health):
-    """Выполняет атаку врага, обновляя здоровье игрока."""
-    stdscr.addstr("\nВраг решает атаковать...\n", curses.color_pair(1))
-    enemy_roll = random.randint(1, 6) + character_data['params'].get('strength', 0)
+    """Выполняет атаку врага, обновляя здоровье игрока с учетом экипированных предметов врага."""
+    
+    # Учитываем параметры с экипированных предметов врага
+    enemy_weapon_bonus = 0
+    if character_data['inventory']['equipped']['weapon']:
+        enemy_weapon = character_data['inventory']['equipped']['weapon']
+        enemy_weapon_bonus = enemy_weapon.get('effect', {}).get('strength', 0)
+
+    enemy_roll = random.randint(1, 6) + character_data['params'].get('strength', 0) + enemy_weapon_bonus
     player_roll = random.randint(1, 6) + player_stats.get('strength', 0)
     
     # Показываем результат кубиков
@@ -70,6 +87,7 @@ def perform_enemy_attack(stdscr, player_stats, character_data, player_health):
     player_health -= damage
     stdscr.addstr(f"\nВраг нанес вам {damage} урона!\n", curses.color_pair(1))
     return player_health
+
 
 def start_battle(stdscr, character_data, player_stats, score):
     """Основная функция для начала битвы с персонажем."""

@@ -16,5 +16,14 @@
         "master": 0.5
     },
     "memory": [],
-    "mood": 0.5
+    "mood": 0.5,
+    "inventory": {
+        "backpack": [],
+        "equipped": {
+            "weapon": null,
+            "armor": null,
+            "artifact": null
+        },
+        "slots": 10
+    }
 }

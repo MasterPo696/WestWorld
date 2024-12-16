@@ -1,16 +1,11 @@
 {
     "name": "Master",
     "params": {
-        "intelligence": 9,
-        "strength": 7,
-        "cunning": 8,
-        "kindness": 7,
-        "charisma": 4,
+        "intelligence": 5,
+        "strength": 6,
         "endurance": 6,
-        "perception": 5,
-        "creativity": 5,
-        "courage": 2,
-        "empathy": 5
+        "courage": 5,
+        "perception": 4
     },
     "legend": "Мастер игры",
     "morals": {
@@ -19,5 +14,89 @@
     },
     "relations": {},
     "memory": [],
-    "mood": 0.5
+    "mood": 0.5,
+    "inventory": {
+        "backpack": [
+            {
+                "name": "Листок травы",
+                "type": "usable",
+                "rarity": "common",
+                "effect": {
+                    "energy_regeneration": 10,
+                    "duration": 3
+                },
+                "description": "Ускоряет восстановление энергии на 10% в течение 3 ходов."
+            },
+            {
+                "name": "Зелье здоровья",
+                "type": "usable",
+                "rarity": "common",
+                "effect": {
+                    "health_restore": 20,
+                    "duration": 1
+                },
+                "description": "Восстанавливает 20 единиц здоровья."
+            },
+            {
+                "name": "Листок травы",
+                "type": "usable",
+                "rarity": "common",
+                "effect": {
+                    "energy_regeneration": 10,
+                    "duration": 3
+                },
+                "description": "Ускоряет восстановление энергии на 10% в течение 3 ходов."
+            },
+            {
+                "name": "Рукавичка силы",
+                "type": "usable",
+                "rarity": "common",
+                "effect": {
+                    "strength": 2,
+                    "duration": 5
+                },
+                "description": "Увеличивает силу на 2 на 5 ходов."
+            },
+            {
+                "name": "Листок травы",
+                "type": "usable",
+                "rarity": "common",
+                "effect": {
+                    "energy_regeneration": 10,
+                    "duration": 3
+                },
+                "description": "Ускоряет восстановление энергии на 10% в течение 3 ходов."
+            }
+        ],
+        "equipped": {
+            "weapon": {
+                "name": "Меч злого шамана",
+                "description": "Меч, что насыщен черной магией.",
+                "type": "weapon",
+                "rarity": "epic",
+                "effect": {
+                    "strength": 6,
+                    "intelligence": 2
+                },
+                "neg_effect": {
+                    "courage": -3,
+                    "madness": "Персонаж может в случае страха начать неадекватно атаковать союзников."
+                }
+            },
+            "armor": null,
+            "artifact": {
+                "name": "Магический кристалл",
+                "description": "Кристалл, поглощающий магическую энергию.",
+                "type": "artifact",
+                "rarity": "rare",
+                "effect": {
+                    "intelligence": 5
+                },
+                "neg_effect": {
+                    "strength": -2
+                }
+            }
+        },
+        "slots": 10
+    }
 }

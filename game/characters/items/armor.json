@@ -1,0 +1,42 @@
+[
+    {
+      "name": "Кожаная броня",
+      "description": "Простой защитный предмет для новичков.",
+      "type": "armor",
+      "rarity": "common",
+      "effect": {
+        "strength": 3
+      },
+      "neg_effect": {
+        "intelligence": 2
+      }
+    },
+    {
+      "name": "Черная броня",
+      "description": "Броня из редкого металла, защищающая от физических атак.",
+      "type": "armor",
+      "rarity": "rare",
+      "effect": {
+        "strength": 5,
+        "endurance": 4
+      },
+      "neg_effect": {
+        "perception": -1
+      }
+    },
+    {
+      "name": "Броня древнего дракона",
+      "description": "Легендарная броня, созданная из чешуи дракона.",
+      "type": "armor",
+      "rarity": "legendary",
+      "effect": {
+        "endurance": 10,
+        "strength": 7
+      },
+      "neg_effect": {
+        "courage": -4,
+        "intelligence": -3
+      }
+    }
+  ]
+  

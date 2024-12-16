@@ -20,8 +20,8 @@ def main(stdscr):
         # Настройка цветов
         setup_colors()  # Теперь эта строка не закомментирована
         # Генерация объектов на карте
-        pp, ep, fp, wp, cp = create_objects_pos(rows, cols, int(ec), int(fc), int(cc))
-        game_map = create_map(rows, cols, pp, ep, fp, wp, cp)
+        pp, ep, tp, wp, cp = create_objects_pos(rows, cols, int(ec), int(fc), int(cc))
+        game_map = create_map(rows, cols, pp, ep, tp, wp, cp)
         print_map(stdscr, game_map, score=0)
 
         # Обработка ввода игрока и обновление карты

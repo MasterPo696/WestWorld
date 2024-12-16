@@ -13,8 +13,17 @@
         "never_harm": "Не причиняй вреда никому."
     },
     "relations": {
-        "master": 0.5
+        "master": 0.8999999999999999
     },
     "memory": [],
-    "mood": 0.5
+    "mood": 0.5,
+    "inventory": {
+        "backpack": [],
+        "equipped": {
+            "weapon": null,
+            "armor": null,
+            "artifact": null
+        },
+        "slots": 10
+    }
 }

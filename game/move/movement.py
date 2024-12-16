@@ -1,4 +1,5 @@
 from game.actions.interaction import interact_with_character
+from game.actions.treasures import interact_with_treasure
 from game.characters.creation import CreateCharacter
 import os 
 import curses
@@ -57,9 +58,9 @@ def move_character(direction, player_pos, game_map, rows, cols, score, stdscr, p
         score += 1  # Увеличиваем счет, если монета
 
     # Проверка на друзей
-    if game_map[new_x][new_y] == 'F':
+    if game_map[new_x][new_y] == 'T':
         friend_name = "Ally"  # Пример имени друга
-        interact_with_character(stdscr, friend_name, True, player_stats, score, rows)
+        interact_with_treasure(stdscr, player_stats)
 
     # Обновляем позицию игрока
     player_pos = (new_x, new_y)

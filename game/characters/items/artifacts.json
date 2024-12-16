@@ -1,0 +1,42 @@
+[
+    {
+      "name": "Магический кристалл",
+      "description": "Кристалл, поглощающий магическую энергию.",
+      "type": "artifact",
+      "rarity": "rare",
+      "effect": {
+        "intelligence": 5
+      },
+      "neg_effect": {
+        "strength": -2
+      }
+    },
+    {
+      "name": "Старый амулет",
+      "description": "Амулет, который был забытым источником силы.",
+      "type": "artifact",
+      "rarity": "epic",
+      "effect": {
+        "endurance": 6,
+        "strength": 3
+      },
+      "neg_effect": {
+        "courage": -3
+      }
+    },
+    {
+      "name": "Око дракона",
+      "description": "Драгоценный камень, который дарует владельцу силу.",
+      "type": "artifact",
+      "rarity": "legendary",
+      "effect": {
+        "strength": 7,
+        "perception": 3
+      },
+      "neg_effect": {
+        "intelligence": -4,
+        "courage": -2
+      }
+    }
+  ]
+  

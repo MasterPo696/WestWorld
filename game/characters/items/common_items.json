@@ -1,0 +1,33 @@
+[
+    {
+      "name": "Зелье здоровья",
+      "type": "usable",
+      "rarity": "common",
+      "effect": {
+        "health_restore": 20,
+        "duration": 1
+      },
+      "description": "Восстанавливает 20 единиц здоровья."
+    },
+    {
+      "name": "Рукавичка силы",
+      "type": "usable",
+      "rarity": "common",
+      "effect": {
+        "strength": 2,
+        "duration": 5
+      },
+      "description": "Увеличивает силу на 2 на 5 ходов."
+    },
+    {
+      "name": "Листок травы",
+      "type": "usable",
+      "rarity": "common",
+      "effect": {
+        "energy_regeneration": 10,
+        "duration": 3
+      },
+      "description": "Ускоряет восстановление энергии на 10% в течение 3 ходов."
+    }
+  ]
+  

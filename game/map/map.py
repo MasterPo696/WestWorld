@@ -1,6 +1,8 @@
 import curses
 from game.screen.interface import setup_colors
 import random
+from game.characters.loading import load_master_data
+from game.screen.interface import display_equipped_items
 
 
 
@@ -31,7 +33,7 @@ def create_map(rows, cols, player_pos, enemies, friends, walls, coins):
 
     # Размещение друзей
     for fx, fy in friends:
-        game_map[fx][fy] = 'F'
+        game_map[fx][fy] = 'T'
 
     # Размещение стен
     for wx, wy in walls:
@@ -43,135 +45,47 @@ def create_map(rows, cols, player_pos, enemies, friends, walls, coins):
 
     return game_map
 
-# def print_map(stdscr, game_map, score):
-#     """Отображает карту и текущий счёт на экране."""
-#     stdscr.clear()
-#     for row in game_map:
-#         stdscr.addstr(" ".join(str(cell) for cell in row) + "\n")
-#     stdscr.addstr(f"Счёт: {score}\n")
-#     stdscr.refresh()
 
-import random
-import random
-
-import random
-
-import random
-
-def grow_walls(rows, cols, start_x, start_y, growth_limit=20):
-    """Функция для кораллового роста стен, начиная с случайной точки на верхней стене."""
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Вверх, вниз, влево, вправо
-    walls = set([(start_x, start_y)])  # Начальная точка
-    occupied_positions = set(walls)  # Стены уже заняты
-
-    growth_count = 0
-    current_position = (start_x, start_y)
+def create_maze(rows, cols):
+    # Создаем базовую сетку, где все клетки стены
+    maze = [['#' for _ in range(cols)] for _ in range(rows)]
+    walls = []  # Список для хранения стен
     
-    while growth_count < growth_limit:
+    # Функция для прорезания проходов
+    def carve_passages(x, y):
+        directions = [(-2, 0), (2, 0), (0, -2), (0, 2)]  # Вверх, вниз, влево, вправо
         random.shuffle(directions)  # Перемешиваем направления для случайности
-
-        growth_successful = False  # Флаг успешного роста в текущем шаге
+        
         for dx, dy in directions:
-            new_x, new_y = current_position[0] + dx, current_position[1] + dy
+            nx, ny = x + dx, y + dy  # Новая клетка, куда будет проведен путь
             
-            # Проверяем, что новая позиция внутри карты и не занята
-            if 1 <= new_x < rows - 1 and 1 <= new_y < cols - 1 and (new_x, new_y) not in occupied_positions:
-                # Проверяем, чтобы вокруг новой клетки не было других клеток (кроме самой клетки)
-                has_neighbors = False
-                for check_dx in [-1, 0, 1]:
-                    for check_dy in [-1, 0, 1]:
-                        if check_dx == 0 and check_dy == 0:
-                            continue  # Пропускаем саму клетку
-                        neighbor_x, neighbor_y = new_x + check_dx, new_y + check_dy
-                        if (neighbor_x, neighbor_y) in occupied_positions:
-                            has_neighbors = True
-                            break
-                    if has_neighbors:
-                        break
+            # Проверяем, что клетка находится в пределах карты и является стеной
+            if 0 < nx < rows - 1 and 0 < ny < cols - 1 and maze[nx][ny] == '#':  
+                maze[nx][ny] = ' '  # Убираем стену
+                maze[x + dx // 2][y + dy // 2] = ' '  # Убираем стену между текущей клеткой и новой
+                
+                carve_passages(nx, ny)  # Рекурсивно прорезаем новые проходы
 
-                # Если вокруг клетки нет соседей, добавляем ее
-                if not has_neighbors:
-                    walls.add((new_x, new_y))
-                    occupied_positions.add((new_x, new_y))
-                    growth_count += 1
-                    current_position = (new_x, new_y)  # Переходим к новой позиции
-                    growth_successful = True
-                    break
+    # Стартовая точка (необходимо, чтобы она была в центре)
+    start_x, start_y = random.randrange(1, rows - 1, 2), random.randrange(1, cols - 1, 2)
+    maze[start_x][start_y] = ' '  # Убираем стену с начальной позиции
+    carve_passages(start_x, start_y)  # Начинаем процесс создания лабиринта
 
-        # Если за одну итерацию не было найдено места для роста, выводим предупреждение
-        if not growth_successful:
-            print("Не удалось найти место для роста, завершение.")
-            break
+    # Собираем список стен
+    for i in range(rows):
+        for j in range(cols):
+            if maze[i][j] == '#':
+                walls.append((i, j))  # Добавляем координаты стены в список
 
-    return list(walls)
-
-# Генерация случайных координат для объектов
-def generate_position(occupied_positions, rows, cols):
-    """Генерация случайных координат для объектов."""
-    while True:
-        x = random.randint(1, rows - 2)  # Исключаем стены
-        y = random.randint(1, cols - 2)
-        if (x, y) not in occupied_positions:
-            return (x, y)
-
-def create_objects_pos(rows, cols, enemy_count, friend_count, coins_count):
-    # Инициализация списков объектов
-    coins = []
-    enemies_pos = []
-    friends_pos = []
-    # Базовые стены по периметру
-    walls = [(0, i) for i in range(cols)] + [(rows - 1, i) for i in range(cols)] + \
-            [(i, 0) for i in range(rows)] + [(i, cols - 1) for i in range(rows)]
-
-    # Случайная точка на верхней стене для начала роста
-    start_x, start_y = 3, random.randint(3, cols - 2)  # Выбираем случайную точку на верхней стене
-
-    # Добавляем растущий коралловый рост стены
-    grown_walls = grow_walls(rows, cols, start_x, start_y, growth_limit=20)
-
-    # Добавляем новые стены из функции grow_walls к общему списку walls
-    walls.extend(grown_walls)  # Используем extend, чтобы добавить элементы из grown_walls в walls
-
-    occupied_positions = set(walls)  # Стены уже заняты
-
-    # Генерация позиций для врагов
-    for _ in range(enemy_count):
-        enemy_pos = generate_position(occupied_positions, rows, cols)
-        enemies_pos.append(enemy_pos)
-        occupied_positions.add(enemy_pos)
-
-    # Генерация позиций для друзей
-    for _ in range(friend_count):
-        friend_pos = generate_position(occupied_positions, rows, cols)
-        friends_pos.append(friend_pos)
-        occupied_positions.add(friend_pos)
-
-    # Генерация позиций для монет
-    for _ in range(coins_count):
-        coin_pos = generate_position(occupied_positions, rows, cols)
-        coins.append(coin_pos)
-        occupied_positions.add(coin_pos)
-
-    # Позиция игрока
-    player_pos = generate_position(occupied_positions, rows, cols)
-
-    return player_pos, enemies_pos, friends_pos, walls, coins
+    return walls  # Возвращаем список стен
 
 
-# Пример вызова
-# rows, cols = 10, 10
-# start_x, start_y = 5, 5
-# growth_limit = 20
-# walls = grow_walls(rows, cols, start_x, start_y, growth_limit)
-# print("Конечный результат:", walls)
 
-# # Пример вызова
-# rows, cols = 10, 10
-# start_x, start_y = 5, 5
-# growth_limit = 20
-# walls = grow_walls(rows, cols, start_x, start_y, growth_limit)
-# # print("Конечный результат:", walls)
 
+
+
+
+import random
 
 
 def generate_position(occupied_positions, rows, cols):
@@ -182,41 +96,35 @@ def generate_position(occupied_positions, rows, cols):
         if (x, y) not in occupied_positions:
             return (x, y)
 
-def create_objects_pos(rows, cols, enemy_count, friend_count, coins_count):
+
+def create_objects_pos(rows, cols, enemy_count, treasure_count, coins_count):
     # Инициализация списков объектов
     coins = []
-    enemies_pos = []
-    friends_pos = []
+    enemies = []
+    treasures = []
     # Базовые стены по периметру
     walls = [(0, i) for i in range(cols)] + [(rows - 1, i) for i in range(cols)] + \
             [(i, 0) for i in range(rows)] + [(i, cols - 1) for i in range(rows)]
 
-    # Случайная точка на верхней стене для начала роста
-    start_x, start_y = 3, random.randint(3, cols - 2)  # Выбираем случайную точку на верхней стене
-
     # Добавляем растущий коралловый рост стены
-    grown_walls = grow_walls(rows, cols, start_x, start_y, 10)
-    print("Конечный результат:", walls)
-    # grown_walls = grow_walls(rows, cols, start_x, start_y, 4)
+    grown_walls = create_maze(rows, cols)
 
     # Добавляем новые стены из функции grow_walls к общему списку walls
     walls.extend(grown_walls)  # Используем extend, чтобы добавить элементы из grown_walls в walls
 
     occupied_positions = set(walls)  # Стены уже заняты
 
-
-
     # Генерация позиций для врагов
     for _ in range(enemy_count):
         enemy_pos = generate_position(occupied_positions, rows, cols)
-        enemies_pos.append(enemy_pos)
+        enemies.append(enemy_pos)
         occupied_positions.add(enemy_pos)
 
     # Генерация позиций для друзей
-    for _ in range(friend_count):
-        friend_pos = generate_position(occupied_positions, rows, cols)
-        friends_pos.append(friend_pos)
-        occupied_positions.add(friend_pos)
+    for _ in range(treasure_count):
+        treasure_pos = generate_position(occupied_positions, rows, cols)
+        treasures.append(treasure_pos)
+        occupied_positions.add(treasure_pos)
 
     # Генерация позиций для монет
     for _ in range(coins_count):
@@ -227,7 +135,10 @@ def create_objects_pos(rows, cols, enemy_count, friend_count, coins_count):
     # Позиция игрока
     player_pos = generate_position(occupied_positions, rows, cols)
 
-    return player_pos, enemies_pos, friends_pos, walls, coins
+    return player_pos, enemies, treasures, walls, coins
+
+
+
 
 
 
@@ -242,7 +153,7 @@ def print_map(stdscr, game_map, score):
                 stdscr.addstr(f"{cell} ", curses.color_pair(2))  # Игрок - зеленый
             elif cell == 'V':
                 stdscr.addstr(f"{cell} ", curses.color_pair(1))  # Враг - красный
-            elif cell == 'F':
+            elif cell == 'T':
                 stdscr.addstr(f"{cell} ", curses.color_pair(3))  # Друг - синий
             elif cell == '/':
                 stdscr.addstr(f"{cell} ", curses.color_pair(4))  # Стены - голубые
@@ -253,5 +164,16 @@ def print_map(stdscr, game_map, score):
 
         stdscr.addstr("\n")
 
-    stdscr.addstr(f"Счёт: {score}\n", curses.color_pair(2))  # Счёт - зеленый
+    y = 1
+    x = 55
+
+    character = load_master_data("master")
+
+    stdscr.addstr(y-1, x, f"Персонаж: {character['name']}\n", curses.color_pair(2))  # Счёт - зеленый
+    stdscr.addstr(y, x, f"Счёт: {score}\n", curses.color_pair(2))  # Счёт - зеленый
+
+    display_equipped_items(stdscr, character, x, y)
+    
     stdscr.refresh()
+
+

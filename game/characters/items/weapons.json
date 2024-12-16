@@ -1,0 +1,43 @@
+[
+    {
+      "name": "Меч благословенного рыцаря",
+      "description": "Меч, который когда-то был благословлен для борьбы с тиранией.",
+      "type": "weapon",
+      "rarity": "common",
+      "effect": {
+        "strength": 4
+      },
+      "neg_effect": {
+        "perception": -1
+      }
+    },
+    {
+      "name": "Клинок темных душ",
+      "description": "Меч, заключающий в себе силу темных душ.",
+      "type": "weapon",
+      "rarity": "rare",
+      "effect": {
+        "strength": 5,
+        "courage": 2
+      },
+      "neg_effect": {
+        "intelligence": -3,
+        "madness": "Во время диалога персонаж может выкрикнуть 'fight!', что заставит персонажей сражаться."
+      }
+    },
+    {
+      "name": "Меч злого шамана",
+      "description": "Меч, что насыщен черной магией.",
+      "type": "weapon",
+      "rarity": "epic",
+      "effect": {
+        "strength": 6,
+        "intelligence": 2
+      },
+      "neg_effect": {
+        "courage": -3,
+        "madness": "Персонаж может в случае страха начать неадекватно атаковать союзников."
+      }
+    }
+  ]
+  
