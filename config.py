@@ -1,7 +1,7 @@
-GIGA_API_KEY = "ZWMyNTFkZWEtODBmZS00ODE4LWE4M2YtZmJmN2RhODA4NWNkOmUyZDVmOTlmLTY2MzUtNGY2MS04YjNhLWRhMzJjY2NiODY4NA=="
-AI21_API_KEY = "hDAEGAbA9Mg8JWjkJp6GP4G5A5F4du05"
+GIGA_API_KEY = "GIGA_API_KEY"
+AI21_API_KEY = "AI21_API_KEY"
 
-CHAR_DIR = "/Users/masterpo/Desktop/WestWorld/game/characters/npc"
+CHAR_DIR = "/game/characters/npc"
 
 # Params For Characters
 TOTAL_POINTS = 20
